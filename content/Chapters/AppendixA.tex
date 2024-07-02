@@ -1,0 +1,32 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}\label{appendixA}
+
+Trong Chương \ref{chap3}, đồ án đề xuất mô hình với hai bên phát $\text{PTx}$, $\text{STx}$ đồng thời truyền tin. Cùng với đó, Chương \ref{chap3} cũng xác định dung lượng kênh tại các bên nhận $\text{PRx}$, $\text{SRx}$, $\text{EAVP}$ và $\text{EAVS}$. Dễ thấy rằng, khi độ lợi của tất cả các kênh truyền trong mô hình là các biến ngẫu nhiên độc lập có phân phối mũ với các kỳ vọng riêng, giá trị SINR tại các bên nhận có thể biểu diễn theo biến ngẫu nhiên $U$ được định nghĩa trong \eqref{lemmaU:U}, ứng với các bộ tham số $a, b, c$ khác nhau. Do đó, phần này thực hiện khảo sát biến ngẫu nhiên $U$.
+
+Biến ngẫu nhiên $U$ được định nghĩa trong \eqref{lemmaU:U} phụ thuộc vào hai biến ngẫu nhiên độc lập $X$ và $Y$ có phân phối mũ với kỳ vọng tương ứng $\Omega_X$ và $\Omega_Y$. Ta có hàm mật độ xác suất (PDF) và hàm phân phối tích lũy (CDF) của $X$, $Y$ là:
+\begin{align*}
+    f_X\left(x\right) &= \frac{1}{\Omega_X}\exp\left(-\frac{x}{\Omega_X}\right), \\
+    F_X\left(x\right) &= 1-\exp\left(-\frac{x}{\Omega_X}\right), \\
+    f_Y\left(y\right) &= \frac{1}{\Omega_Y}\exp\left(-\frac{y}{\Omega_Y}\right), \\
+    F_Y\left(y\right) &= 1-\exp\left(-\frac{y}{\Omega_Y}\right),
+\end{align*}
+và vì $X$, $Y$ là độc lập thống kê nên có hàm mật độ xác suất đồng thời là:
+\begin{equation*}
+    f_{XY}\left(x, y\right) = f_X\left(x\right)f_Y\left(y\right).
+\end{equation*}
+
+Khi đó, hàm phân phối tích lũy $F_U(u)$ của biến ngẫu nhiên $U$ định nghĩa trong \eqref{lemmaU:U} được tính như sau:
+\allowdisplaybreaks
+\begin{align*}
+    F_U(u) 
+    &= \mathbb{P}\left(\frac{aX}{bY+c} \leq u \right) \\
+    &= \mathbb{P}\left(X \leq \frac{u\left(bY+c\right)}{a} \right) \\
+    &= \int_{0}^{\infty} \int_{0}^{u\left(by+c\right)/a} f_{XY}\left(x, y\right) \,dxdy \\
+    &= \int_{0}^{\infty} \left( \int_{0}^{u\left(by+c\right)/a} f_{X}\left(x\right) \,dx \right) f_Y\left(y\right) \, dy \\
+    &= \int_{0}^{\infty} F_X\left(\frac{u\left(by+c\right)}{a}\right) f_Y\left(y\right) \, dy \\
+    &= \int_{0}^{\infty} f_Y\left(y\right) \,dy - \int_{0}^{\infty} \exp\left(-\frac{u\left(by+c\right)}{a\Omega_X}\right) \frac{1}{\Omega_Y}\exp\left(-\frac{y}{\Omega_Y}\right) \, dy \\
+    &= 1 - \frac{1}{\Omega_Y}\exp\left(-\frac{uc}{a\Omega_X}\right)\int_{0}^{\infty} \exp\left(-y\left( \frac{ub}{a\Omega_X} + \frac{1}{\Omega_Y}\right)\right) \, dy \\
+    &= 1 - \frac{1}{\frac{b\Omega_Y}{a\Omega_X}u + 1}\exp\left(-\frac{uc}{a\Omega_X}\right).
+\end{align*}
+
+\end{document}

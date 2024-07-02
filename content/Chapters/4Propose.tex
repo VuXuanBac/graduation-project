@@ -1,0 +1,354 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}\label{chap4}
+
+Chương \ref{chap3} đã phát biểu cụ thể một bài toán tối ưu đa mục tiêu, mô hình cho bài toán thiết kế hệ thống mà đồ án này hướng tới giải quyết. Mục tiêu của chương này là đề xuất hướng giải quyết cho bài toán đó. Trước hết chương này thực hiện phân tích bài toán để thấy rõ sự phụ thuộc của các đại lượng đối với các biến quyết định. Từ đó chương này phát biểu điều kiện ràng buộc cho các tham số để đảm bảo bài toán có nghiệm. Với kết quả phân tích có được, chương này thực hiện phát triển bài toán ban đầu thành hai bài toán tối ưu một mục tiêu ứng với sự ưu tiên khác nhau của người thiết kế - SU. Phương pháp giải quyết các bài toán này được đề cập ở cuối chương.
+
+\section{Phân tích bài toán}
+
+\subsection{Phân tích các đại lượng trong mô hình}
+
+Trong Chương \ref{chap3}, đồ án đề xuất mô hình với hai bên phát $\text{PTx}$, $\text{STx}$ đồng thời truyền tin. Từ các công thức \eqref{capacity}, thấy rằng dung lượng kênh được biểu diễn theo tỷ số tín hiệu trên nhiễu và can nhiễu SINR. Mỗi đại lượng SINR lại phụ thuộc vào hai độ lợi kênh truyền từ các bên phát tới bên thu tương ứng. Đồ án cũng giả thiết rằng độ lợi của tất cả các kênh truyền trong mô hình là các biến ngẫu nhiên độc lập có phân phối mũ. Do đó, để xác định phân phối của dung lượng kênh, bổ đề sau thực hiện khảo sát biến ngẫu nhiên đại diện cho SINR tại các bên thu.
+
+\begin{lemma}\label{lemmaU}
+Với $X$ và $Y$ là các biến ngẫu nhiên độc lập có phân phối mũ với kỳ vọng tương ứng là $\Omega_X$ và $\Omega_Y$ $\left(\Omega_X > 0, \Omega_Y > 0\right)$. Biến ngẫu nhiên $U$ được định nghĩa là:
+\begin{equation}\label{lemmaU:U}
+    U = \frac{aX}{bY+c},
+\end{equation}
+trong đó $a$, $b$, $c$ là các hằng số dương. Khi đó, $U$ có hàm phân phối tích lũy (cumulative distribution function - CDF) sau:
+\begin{equation}\label{lemmaU:CDF}
+    F_U\left(u\right) = 1-\frac{1}{\frac{b\Omega_Y}{a\Omega_X}u + 1}\exp\left(-\frac{uc}{a\Omega_X}\right).
+\end{equation}
+\end{lemma}
+\begin{proof}
+Bổ đề \ref{lemmaU} được chứng minh trong phần phụ lục \ref{appendixA}.
+\end{proof}
+
+Trong mô hình đề xuất, độ đo đánh giá hiệu năng an toàn cho hệ thống được lựa chọn là tốc độ lộ tin trung bình. Theo định nghĩa \eqref{ailr}, đại lượng này phụ thuộc vào mức độ không rõ ràng tại kẻ nghe lén $\Delta^{(P)}$ và $\Delta^{(S)}$. Đối với kênh truyền suy hao, từ các công thức \eqref{deltap} và \eqref{deltas}, thấy rằng $\Delta^{(P)}$ và $\Delta^{(S)}$ chỉ phụ thuộc vào một biến ngẫu nhiên là tỷ số tín hiệu trên nhiễu và can nhiễu SINR tại kẻ nghe lén $\text{EAVP}$, $\text{EAVS}$ tương ứng. Do đó, khi xác định được phân phối của SINR tại bên nghe lén, tốc độ lộ tin trung bình có thể được xác định dựa trên kỳ vọng của biến ngẫu nhiên đại diện cho mức độ không rõ ràng tại kẻ nghe lén. Biến ngẫu nhiên đó được khảo sát trong bổ đề sau.
+
+\begin{lemma}\label{lemmaZ}
+Gọi $U$ là biến ngẫu nhiên liên tục có hàm phân phối tích lũy $F_U(u)$ và $U$ chỉ nhận giá trị không âm, tức là $\mathbb{P}\left(U < 0\right) = 0$. Xét hàm của biến ngẫu nhiên $U$:
+\begin{equation}\label{lemmaZ:Z}
+h_{m,n}\left(U\right)=
+\begin{cases}
+1,& \text{nếu}\quad U\leq 2^{m-n}-1\\
+\frac{m - \log_2\left({1 + U}\right)}{n},& \text{nếu}\quad 2^{m-n} - 1 < U < 2^m - 1\\
+0 ,& \text{nếu}\quad 2^m-1 \leq U,
+\end{cases}
+\end{equation}
+trong đó $m$, $n$ là các hằng số thực thỏa mãn $m \geq n > 0$. Khi đó, $Z = h_{m,n}\left(U\right)$ là biến ngẫu nhiên, có hàm phân phối tích lũy (CDF) là:
+\begin{equation}\label{lemmaZ:CDF}
+F_Z\left(z\right) = 
+\begin{cases}
+1,& \text{nếu}\quad z > 1\\
+1-F_U\left(2^{m-nz}-1\right),& \text{nếu}\quad 0 < z \leq 1\\
+0 ,& \text{nếu}\quad z \leq 0,
+\end{cases}
+\end{equation}
+
+\end{lemma}
+\begin{proof}
+Bổ đề \ref{lemmaZ} được chứng minh trong phần phụ lục \ref{appendixB}.
+\end{proof}
+
+Với Bổ đề \ref{lemmaZ}, khi $U$ đại diện cho SINR tại kẻ nghe lén thì $Z$ đại diện cho mức độ không rõ ràng tại kẻ nghe lén đó. Bổ đề này xem xét trường hợp tổng quát với $U$ là biến ngẫu nhiên không âm bất kỳ. Khi đề cập mô hình truyền tin cụ thể, phân phối $F_U\left(u\right)$ của SINR tại kẻ nghe lén là xác định, từ đó có thể đánh giá kỳ vọng của $Z$, và theo công thức \eqref{ailr}, có thể xác định tốc độ lộ tin trung bình.
+
+\subsection{Phân tích hàm mục tiêu}
+
+Các hàm mục tiêu của bài toán \eqref{moop} đều là tốc độ lộ tin trung bình, $R_L^{(P)}$ và $R_L^{(S)}$ khi PU và SU đồng thời truyền tin. Như đã phân tích, các đại lượng này được xác định dựa vào giá trị trung bình, hay kỳ vọng của mức độ không rõ ràng tại kẻ nghe lén $\text{EAVP}$, $\text{EAVS}$ tương ứng. Khi xem xét trường hợp PU và SU cùng truyền tin, SINR tại các kẻ nghe lén có thể được đại diện bởi biến ngẫu nhiên $U$ định nghĩa trong Bổ đề \ref{lemmaU}. Dựa trên kết quả của Bổ đề \ref{lemmaZ}, kỳ vọng của mức độ không rõ ràng tại kẻ nghe lén trong trường hợp này được xác định trong bổ đề sau.
+
+\begin{lemma}\label{lemmaEZ:Co}
+Khi $U$ là biến ngẫu nhiên được định nghĩa trong \eqref{lemmaU:U}, biến ngẫu nhiên $Z = h_{m, n}\left(U\right)$, với $h_{m, n}$ được định nghĩa trong \eqref{lemmaZ:Z}, có kỳ vọng là:
+\begin{equation}\label{lemmaEZ:EZCo}
+\begin{aligned}
+    \mathbb{E}\left\{Z\right\} 
+    &= 1 - \frac{\exp\left(k/l\right)}{n\left(l-1\right)\ln{2}}\left[\textnormal{Ei}\left(-k2^m+k-\frac{k}{l}\right)-\textnormal{Ei}\left(-k2^{m-n}+k-\frac{k}{l}\right)\right] \\ 
+    & \qquad + \frac{\exp\left(k\right)}{n\left(l-1\right)\ln{2}}\Bigl[\textnormal{Ei}\left(-k2^m\right)-\textnormal{Ei}\left(-k2^{m-n}\right)\Bigr],
+\end{aligned}
+\end{equation}
+trong đó, $\textnormal{Ei}\left(x\right)$ là hàm tích phân mũ và $k$, $l$ được xác định bằng:
+\begin{equation}\label{lemmaEZ:klCo}
+\begin{aligned}
+    k &= \frac{c}{a\Omega_X}, \\
+    l &= \frac{b\Omega_Y}{a\Omega_X},
+\end{aligned}
+\end{equation}
+với $a$, $b$, $c$, $\Omega_X$, $\Omega_Y$ được đề cập trong \eqref{lemmaU:U}.
+Trong trường hợp đặc biệt khi $l=1$, công thức biểu diễn cho $\mathbb{E}\left\{Z\right\}$ là:
+\begin{equation}\label{lemmaEZ:EZCo:l1}
+\begin{aligned}
+    \mathbb{E}\left\{Z\right\} 
+    &= 1 + \frac{k\exp\left(k\right)}{n\ln{2}}
+       \Bigl[
+            \textnormal{Ei}\left(-k{2^{m}}\right) - 
+            \textnormal{Ei}\left(-k{2^{m-n}}\right)
+       \Bigr] + \\
+       & \qquad + \frac{1}{n\ln{2}}
+        \left[ 
+            \frac{\exp\left(-k2^m+k\right)}{2^m} -
+            \frac{\exp\left(-k2^{m-n}+k\right)}{2^{m-n}}
+        \right] .
+\end{aligned}
+\end{equation}
+
+\end{lemma}
+\begin{proof}
+Bổ đề \ref{lemmaEZ:Co} được chứng minh trong phần phụ lục \ref{appendixB}.
+\end{proof}
+
+Từ kết quả Bổ đề \ref{lemmaEZ:Co}, tốc độ lộ tin trung bình tại PU $R_L^{(P)}$ trong \eqref{rlp} được viết lại bằng việc coi $Z$ là $\Delta^{(P)}$ và các tham số $a, b, c, m, n, \Omega_X, \Omega_Y$ tương ứng bằng $p_P$, $p_S$, $N_E$, $R_b^{(P)}$, $R_s^{(P)}$, $\Omega_{pe}$, $\Omega_{se}$. Ta có:
+
+\allowdisplaybreaks
+\begin{alignb}
+    R_L^{(P)} 
+    &= \left(1-\mathbb{E}\left\{\Delta^{(P)}\right\} \right)R_s^{(P)} \\
+    &=  \frac{\exp\left(k^{(P)}/l^{(P)}\right)}{\left(l^{(P)}-1\right)\ln{2}}\left[
+    \text{Ei}\left(-k^{(P)}\gamma_b^{(P)}-\frac{k^{(P)}}{l^{(P)}}\right)-\text{Ei}\left(-k^{(P)}\gamma_s^{(P)}-\frac{k^{(P)}}{l^{(P)}}\right)\right] \\ 
+    & \quad - \frac{\exp\left(k^{(P)}\right)}{\left(l^{(P)}-1\right)\ln{2}}\left[
+    \text{Ei}\left(-k^{(P)}\gamma_b^{(P)}-k^{(P)}\right)-\text{Ei}\left(-k^{(P)}\gamma_s^{(P)}-k^{(P)}\right)\right], \label{rlpfull}
+\end{alignb}
+với trường hợp $l^{(P)} = 1$ là:
+\begin{alignb}
+    R_L^{(P)} 
+    &=  \frac{k^{(P)}\exp\left(k^{(P)}\right)}{\ln{2}}
+       \Biggl[
+            \textnormal{Ei}\left( -k^{(P)}\gamma_s^{(P)} - k^{(P)} \right) - 
+            \textnormal{Ei}\left( -k^{(P)}\gamma_b^{(P)} - k^{(P)} \right)
+       \Biggr]  +  \\
+       & \quad + \frac{1}{\ln{2}}
+        \left[ 
+            \frac{\exp\left(-k^{(P)}\gamma_s^{(P)}\right)}{\gamma_s^{(P)}+1} -
+            \frac{\exp\left(-k^{(P)}\gamma_b^{(P)}\right)}{\gamma_b^{(P)}+1}
+        \right].
+\end{alignb}
+với
+\begin{equation}\label{rlpfull:gamma}
+\begin{aligned}
+    \gamma_b^{(P)} &= 2^{R_b^{(P)}}-1, \\
+    \gamma_s^{(P)} &= 2^{R_b^{(P)} - R_s^{(P)}}-1,
+\end{aligned}
+\end{equation}
+và $k$, $l$ trong \eqref{lemmaEZ:klCo} trở thành:
+\begin{equation}\label{rlpfull:kl}
+\begin{aligned}
+    k^{(P)} &= \frac{N_E}{p_P\Omega_{pe}}, \\
+    l^{(P)} &= \frac{p_S\Omega_{se}}{p_P\Omega_{pe}},
+\end{aligned}
+\end{equation}
+
+Tương tự, tốc độ lộ tin trung bình tại SU $R_L^{(S)}$ được viết lại là:
+\begin{alignb}
+    R_L^{(S)} 
+    &= \left(1-\mathbb{E}\left\{\Delta^{(S)}\right\} \right)R_s^{(S)} \\
+    &=  \frac{\exp\left(k^{(S)}/l^{(S)}\right)}{\left(l^{(S)}-1\right)\ln{2}}\left[
+    \textnormal{Ei}\left(-k^{(S)}\gamma_b^{(S)}-\frac{k^{(S)}}{l^{(S)}}\right)-\textnormal{Ei}\left(-k^{(S)}\gamma_s^{(S)}-\frac{k^{(S)}}{l^{(S)}}\right)\right] \\ 
+    & \quad - \frac{\exp\left(k^{(S)}\right)}{\left(l^{(S)}-1\right)\ln{2}}\left[
+    \textnormal{Ei}\left(-k^{(S)}\gamma_b^{(S)}-k^{(S)}\right)-
+    \textnormal{Ei}\left(-k^{(S)}\gamma_s^{(S)}-k^{(S)}\right)\right], \label{rlsfull}
+\end{alignb}
+với trường hợp $l^{(S)} = 1$ là:
+\allowdisplaybreaks
+\begin{alignb}
+    R_L^{(S)} 
+    &=  \frac{k^{(S)}\exp\left(k^{(S)}\right)}{\ln{2}}
+       \Biggl[
+            \textnormal{Ei}\left( -k^{(S)}\gamma_s^{(S)} - k^{(S)} \right) - 
+            \textnormal{Ei}\left( -k^{(S)}\gamma_b^{(S)} - k^{(S)} \right)
+       \Biggr]  +  \\
+       & \quad + \frac{1}{\ln{2}}
+        \left[ 
+            \frac{\exp\left(-k^{(S)}\gamma_s^{(S)}\right)}{\gamma_s^{(S)}+1} -
+            \frac{\exp\left(-k^{(S)}\gamma_b^{(S)}\right)}{\gamma_b^{(S)}+1}
+        \right].
+\end{alignb}
+với
+\begin{equation}\label{rlsfull:gamma}
+\begin{aligned}
+    \gamma_b^{(S)} &= 2^{R_b^{(S)}}-1, \\
+    \gamma_s^{(S)} &= 2^{R_b^{(S)} - R_s^{(S)}}-1,
+\end{aligned}
+\end{equation}
+và
+\begin{equation}\label{rlsfull:kl}
+\begin{aligned}
+    k^{(S)} &= \frac{N_F}{p_S\Omega_{sf}}, \\
+    l^{(S)} &= \frac{p_P\Omega_{pf}}{p_S\Omega_{sf}}.
+\end{aligned}
+\end{equation}
+
+\subsection{Phân tích điều kiện khả thi cho các ràng buộc}
+
+Để bài toán tối ưu \eqref{moop} có nghiệm thì tập các giá trị $\left(p_P, p_S\right)$ thỏa mãn các điều kiện ràng buộc phải không rỗng. Gọi tập các giá trị $\left(p_P, p_S\right)$ thỏa mãn các điều kiện ràng buộc trong bài toán \eqref{moop} với hai tham số tùy chỉnh $\sigma^{(P)}$ và $\sigma^{(S)}$ là $G\left(\sigma^{(P)}, \sigma^{(S)}\right)$. Phần này xác định dải giá trị cho $\sigma^{(P)}$ và $\sigma^{(S)}$ để $G$ khác rỗng.
+
+Trước hết, ta biểu diễn $p_{tx}^{(P)}$ và $p_{tx}^{(S)}$ theo $p_P$ và $p_S$. Bắt đầu từ xác suất truyền tin của PU trong công thức \eqref{ptxp}, ta thấy $p_{tx}^{(P)}$ có thể được biểu diễn theo phân phối tích lũy của $\text{SINR}^{(P)}$. Khi coi độ lợi kênh truyền từ $\text{PTx}$ đến $\text{PRx}$ và độ lợi kênh truyền $\text{STx}$ đến $\text{PRx}$ là các biến ngẫu nhiên độc lập $X$, $Y$ có phân phối mũ, thì $\text{SINR}^{(P)}$ được đại diện bởi biến ngẫu nhiên $U$ định nghĩa trong \eqref{lemmaU:U}, với $a, b, c$ tương ứng là $p_P, p_S, N_P$. Như vậy, ta có:
+\begin{alignb}
+p_{tx}^{(P)} 
+    &= \mathbb{P}\left(R_b^{(P)} \leq C^{(P)}\right) \\
+    &= \mathbb{P}\left(2^{R_b^{(P)}} - 1 \leq \frac{p_Pg_{pp}}{p_Sg_{sp} + N_P}\right) \\
+    &= 1 - \mathbb{P}\left(\frac{p_Pg_{pp}}{p_Sg_{sp} + N_P} < 2^{R_b^{(P)}} - 1\right) \\
+    &= \frac{p_P\Omega_{pp}}{p_S\Omega_{sp}\gamma_b^{(P)} + p_P\Omega_{pp}}\exp\left(-\frac{\gamma_b^{(P)}N_P}{p_P\Omega_{pp}}\right), \label{ptxpfull}
+\end{alignb}
+với $\gamma_b^{(P)} = 2^{R_b^{(P)}} - 1$. Tương tự, ta có công thức cho $p_{tx}^{(S)}$:
+\begin{alignb}
+p_{tx}^{(S)} 
+    &= \mathbb{P}\left(R_b^{(S)} \leq C^{(S)}\right) \\
+    &= \mathbb{P}\left(2^{R_b^{(S)}} - 1 \leq \frac{p_Sg_{ss}}{p_Pg_{ps} + N_S}\right) \\
+    &= 1 - \mathbb{P}\left(\frac{p_Sg_{ss}}{p_Pg_{ps} + N_S} < 2^{R_b^{(S)}} - 1\right) \\
+    &= \frac{p_S\Omega_{ss}}{p_P\Omega_{ps}\gamma_b^{(S)} + p_S\Omega_{ss}}\exp\left(-\frac{\gamma_b^{(S)}N_S}{p_S\Omega_{ss}}\right), \label{ptxsfull}
+\end{alignb}
+với $\gamma_b^{(S)} = 2^{R_b^{(S)}} - 1$. Từ các công thức \eqref{ptxpfull} và \eqref{ptxsfull}, ta có thể xác định được xác suất truyền tin cực đại cho PU và SU, kết quả được thể hiện trong bổ đề sau.
+
+\begin{lemma}\label{lemmaptx}
+Dải giá trị cho $p_{tx}^{(P)}$ và $p_{tx}^{(S)}$ là:
+\begin{subequations}\label{power:range}
+\begin{align}
+    0 \leq p_{tx}^{(P)} \leq \exp\left(-\frac{\gamma_b^{(P)}N_P}{p_P^{\text{max}}\Omega_{pp}}\right), \label{ptxp:range} \\
+    0 \leq p_{tx}^{(S)} \leq \exp\left(-\frac{\gamma_b^{(S)}N_S}{p_S^{\text{max}}\Omega_{ss}}\right). \label{ptxs:range}
+\end{align}
+\end{subequations}
+\end{lemma}
+\begin{proof}
+Bổ đề \ref{lemmaptx} được chứng minh trong phần phụ lục \ref{appendixC}.
+\end{proof}
+
+Từ kết quả của Bổ đề \ref{lemmaptx}, ta thấy rằng một bên chỉ đạt được xác suất truyền cao nhất khi bên đó truyền với công suất phát cao nhất và bên còn lại không tham gia truyền. Điều đó có nghĩa là nếu muốn hợp tác với SU, PU cần chấp nhận giảm mức độ hiệu quả sử dụng kênh truyền của mình.
+
+Bổ đề \ref{lemmaptx} cũng cho thấy giá trị lớn nhất mà các bên có thể thiết lập cho $\sigma^{(P)}$ và $\sigma^{(S)}$. Tuy nhiên, các giới hạn này chỉ xem xét độc lập từng đại lượng, vì giá trị lớn nhất của một bên chỉ đạt được khi bên còn lại không phát tín hiệu. Tức là, nếu cả hai bên cùng yêu cầu xác suất truyền tin tối thiểu $\sigma^{(P)}$ và $\sigma^{(S)}$ quá cao thì không thể tìm được bộ công suất phát $\left(p_P, p_S\right)$ thỏa mãn yêu cầu đó, hay PU và SU không thể hợp tác. Do đó, ta cần lựa chọn $\sigma^{(P)}$ và $\sigma^{(S)}$ phù hợp để điều kiện hợp tác xảy ra, tức là tập $G\left(\sigma^{(P)}, \sigma^{(S)}\right)$ của các bộ $\left(p_P, p_S\right)$ là khác rỗng. Do PU có quyền ưu tiên trong việc lựa chọn các tham số của bài toán, nên giá trị $\sigma^{(P)}$ là cố định. Giả sử PU lựa chọn $\sigma^{(P)}$ đảm bảo nhỏ hơn xác suất truyền cao nhất có thể đạt được xác định trong \eqref{ptxp:range}. Khi đó, giá trị lớn nhất của $\sigma^{(S)}$ mà SU có thể lựa chọn để đảm bảo tập $G\left(\sigma^{(P)}, \sigma^{(S)}\right)$ khác rỗng được xác định qua Bổ đề \ref{lemmasigmas}.
+
+\begin{lemma}\label{lemmasigmas}
+Giá trị lớn nhất của $\sigma^{(S)}$ trong \eqref{moop:ptxs} là nghiệm của bài toán tối ưu:
+\begin{subequations}\label{lemmasigmas:opt}
+\begin{align}
+\underset{\sigma^{(S)}}{\textnormal{maximize}} \quad & \sigma^{(S)} \nonumber \\
+\textnormal{s.t} 
+\quad & \phi_s\left(\phi_p\left(p_P^{\text{max}}\right)\right) \geq p_P^{\text{max}}, \\
+\quad & \phi_p\left(\phi_s\left(p_S^{\text{max}}\right)\right) \geq p_S^{\text{max}},
+\end{align}
+\end{subequations}
+trong đó
+\begin{equation}\label{lemmasigmas:g1g2}
+\begin{aligned}
+    \phi_p\left(x\right) &= 
+    \frac{x\Omega_{pp}}{\sigma^{(P)}\gamma_b^{(P)}\Omega_{sp}}
+    \left[
+        \exp\left( -\frac{\gamma_b^{(P)}N_P}{x\Omega_{pp}} \right)
+        - \sigma^{(P)}
+    \right], \\
+    \phi_s\left(x\right) &= 
+    \frac{x\Omega_{ss}}{\sigma^{(S)}\gamma_b^{(S)}\Omega_{ps}}
+    \left[
+        \exp\left( -\frac{\gamma_b^{(P)}N_S}{x\Omega_{ss}} \right)
+        - \sigma^{(S)}
+    \right]. \\
+\end{aligned}
+\end{equation}
+\end{lemma}
+\begin{proof}
+Bổ đề \ref{lemmasigmas} được chứng minh trong phần phụ lục \ref{appendixC}.
+\end{proof}
+
+Tóm lại, điều kiện để tập $G\left(\sigma^{(P)}, \sigma^{(S)}\right)$ khác rỗng, tức bài toán tối ưu \eqref{moop} có nghiệm là:
+\begin{equation}
+\begin{aligned}
+    \sigma^{(P)} &< \exp\left(-\frac{\gamma_b^{(P)}N_P}{p_P^{\text{max}}\Omega_{pp}}\right), \\
+    \sigma^{(S)} &\leq \sigma^{(S)*},
+\end{aligned}
+\end{equation}
+với $\sigma^{(S)*}$ là nghiệm của bài toán tối ưu \eqref{lemmasigmas:opt}.
+
+\subsection{Phân tích trường hợp không hợp tác}
+
+Như đã đề cập trong Chương \ref{chap3}, PU chỉ lựa chọn hợp tác với SU khi việc hợp tác này giúp hiệu năng an toàn cho PU cao hơn so với khi chỉ có PU tham gia truyền. Do đó, trong bài toán thiết kế, SU cần xem xét các độ đo hiệu năng tại PU khi PU thực hiện truyền đơn lẻ.
+
+Khi chỉ có PU truyền tin trong hệ thống, dung lượng kênh truyền chính $C^{(P-NC)}$ và dung lượng kênh truyền nghe lén $C^{(E-NC)}$, trong đó ký hiệu $NC$ (non-cooperative) chỉ trường hợp không hợp tác, có công thức là:
+\begin{subequations}\label{channel:nc}
+\begin{align}
+    C^{(P-NC)} &= \log_2\left(1+\text{SINR}^{(P-NC)}\right) = \log_2\left(1+\frac{p_Pg_{pp}}{N_P}\right), \label{cpnc} \\
+    C^{(E-NC)} &= \log_2\left(1+\text{SINR}^{(E-NC)}\right) = \log_2\left(1+\frac{p_Pg_{pe}}{N_E}\right). \label{cenc}
+\end{align}
+\end{subequations}
+
+Từ đó, xác suất truyền tin tại PU có công thức là:
+\begin{alignb}
+p_{tx}^{(NC)} 
+    &= \mathbb{P}\left(R_b^{(P)} \leq C^{(P-NC)}\right) \\
+    &= \mathbb{P}\left(2^{R_b^{(P)}} - 1 \leq \frac{p_Pg_{pp}}{N_P}\right) \\
+    &= 1 - \mathbb{P}\left(g_{pp} < \frac{N_P\gamma_b^{(P)}}{p_P}\right) \\
+    &= \exp\left(-\frac{\gamma_b^{(P)}N_P}{p_P\Omega_{pp}}\right),
+    \label{ptxpncfull}
+\end{alignb}
+với $\gamma_b^{(P)} = 2^{R_b^{(P)}} - 1$.
+
+Tốc độ lộ tin trung bình tại PU $R_L^{(P-NC)}$ trong trường hợp này được xác định qua $\text{SINR}^{(E-NC)}$, giá trị $\text{SINR}^{(E-NC)}$ chỉ phụ thuộc vào một biến ngẫu nhiên $g_{pe}$ có phân phối mũ. Dựa trên kết quả của Bổ đề \ref{lemmaZ}, kỳ vọng của mức độ không rõ ràng tại kẻ nghe lén trong trường hợp không hợp tác được xác định trong bổ đề sau.
+
+\begin{lemma}\label{lemmaEZ:NC}
+Khi $U$ là biến ngẫu nhiên có phân phối mũ với kỳ vọng $\Omega_U$, biến ngẫu nhiên $Z = h_{m, n}\left(U\right)$, với $h_{m, n}$ được định nghĩa trong \eqref{lemmaZ:Z}, có kỳ vọng là:
+\begin{equation}\label{lemmaEZ:EZNC}
+\begin{aligned}
+    \mathbb{E}\left\{Z\right\} 
+    &= 1 - \frac{\exp\left(1/\Omega_U\right)}{n\ln{2}}\left[\textnormal{Ei}\left(-\frac{2^{m}}{\Omega_U}\right)-\textnormal{Ei}\left(-\frac{2^{m-n}}{\Omega_U}\right)\right],
+\end{aligned}
+\end{equation}
+\end{lemma}
+\begin{proof}
+Bổ đề \ref{lemmaEZ:NC} được chứng minh trong phần phụ lục \ref{appendixB}.
+\end{proof}
+
+Áp dụng Bổ đề \ref{lemmaEZ:NC} với $U$ là biến ngẫu nhiên $\frac{p_P}{N_E}g_{pe}$ có phân phối mũ với kỳ vọng $p_P\Omega_{pe}/N_E$, ta có công thức tỷ lệ lượng tin bị lộ trong trường hợp không hợp tác là:
+\begin{equation}\label{rlnc}
+    R_L^{(NC)}
+    =  \frac{1}{\ln{2}}\exp\left(\frac{N_E}{p_P\Omega_{pe}}\right)\left[\textnormal{Ei}\left(-\frac{N_E2^{R_b^{(P)}}}{p_P\Omega_{pe}}\right)-\textnormal{Ei}\left(-\frac{N_E2^{R_b^{(P)}-R_s^{(P)}}}{p_P\Omega_{pe}}\right)\right].
+\end{equation}
+
+\section{Phát triển và giải quyết bài toán}
+
+Với mô hình là một bài toán tối ưu đa mục tiêu, việc giải quyết bài toán \eqref{moop} theo một phương pháp hậu nghiệm chỉ xác định một tập các lời giải tối ưu Pareto. Tức là sau đó, ta vẫn cần sử dụng một bộ hỗ trợ quyết định để lựa chọn lời giải phù hợp với mục tiêu của người dùng, ở đây là SU. Do đó, đồ án thực hiện giải quyết bài toán tối ưu đa mục tiêu \eqref{moop} bằng việc chuyển về bài toán tối ưu đơn mục tiêu theo phương pháp ràng buộc $\epsilon$. Việc lựa chọn hàm mục tiêu ưu tiên và các ràng buộc phụ thuộc vào mong muốn thiết kế của SU. Như đã đề cập trong Chương \ref{chap3}, SU có hai mục tiêu là (i) được PU lựa chọn và chia sẻ tài nguyên tần số để có thể thực hiện truyền tin và (ii) mức độ an toàn khi truyền tin phải được đảm bảo.
+
+\subsection{Tối ưu cho người dùng thứ cấp}
+
+Với hai mục tiêu đã đề cập, bài toán \eqref{moop} được chuyển thành:
+\begin{subequations}\label{self}
+\begin{align}
+\underset{p_P, p_S}{\text{minimize}} \quad & R_{L}^{(S)} \label{self:sopt} \\
+\text{s.t} 
+\quad & R_{L}^{(P)} \le \theta^{(P)}, \label{self:popt} \\
+\quad & p_{tx}^{(P)} \geq \sigma^{(P)}, \label{self:ptxp} \\
+\quad & p_{tx}^{(S)} \geq \sigma^{(S)}, \label{self:ptxs} \\
+\quad & 0 \leq p_P \leq p_P^\text{max}, \label{self:pp} \\
+\quad & 0 \leq p_S \leq p_S^\text{max}, \label{self:ps}
+\end{align}
+\end{subequations}
+
+Bài toán này thực hiện chuyển hàm mục tiêu $R_{L}^{(P)}$ thành điều kiện ràng buộc \eqref{self:popt}. Lúc này, ưu tiên của SU là thiết kế chiến lược tối ưu cho hiệu năng an toàn của mình, trong khi hiệu năng an toàn của PU chỉ cần đảm bảo ở mức "chấp nhận được" $\theta^{(P)}$. Như đã đề cập trong Chương \ref{chap3}, PU sẵn sàng hợp tác (chia sẻ tần số và cùng truyền tin) nếu như hiệu năng an toàn của PU khi hợp tác tốt hơn khi không hợp tác. Như vậy, mức "chấp nhận được" ở đây, $\theta^{(P)}$, là tốc độ lộ tin trung bình của PU trong điều kiện chỉ có PU truyền tin (non-cooperation, NC), hay $\theta^{(P)} = R_L^{(NC)}$. Có thể thấy, nghiệm tối ưu giải được từ bài toán \eqref{self} đảm bảo được cả hai mục tiêu của bài toán ban đầu. Đồng thời, thiết kế này cũng phù hợp với thực tế khi mà các đối tượng trong hệ thống luôn ích kỷ, chỉ lựa chọn chiến lược tốt nhất cho mình khi đưa ra các quyết định. Trong đồ án này, bài toán \eqref{self} được gọi là "Bài toán tối ưu cá nhân".
+
+\subsection{Mở rộng mô hình}
+
+Bài toán tối ưu cá nhân hoàn toàn phù hợp trong thực tiễn khi mà PU và SU có lợi ích khác nhau và không có lý do gì để SU, bên đề xuất chiến lược, hạn chế hiệu năng của mình để gia tăng hiệu năng cho PU. Tuy nhiên, khi xem xét trường hợp hệ thống có nhiều SU cạnh tranh với nhau để được PU lựa chọn cùng truyền tin, các SU sẽ cần cân nhắc kỹ hơn giữa hai mục tiêu truyền tin đã đề cập.
+
+Trong vấn đề mở rộng này, mô hình hệ thống vẫn bao gồm một PU, song sẽ có nhiều SU, mỗi bên đều có một kẻ nghe lén riêng và đều cần đảm bảo truyền tin mức độ an toàn xác định. Khi muốn truyền tin, PU sẽ lựa chọn một trong các SU để cùng truyền. SU được lựa chọn là SU đem lại hiệu năng an toàn cao nhất cho PU và đồng thời, mức độ an toàn phải cao hơn khi PU không cần hợp tác. Giả thiết rằng, mặc dù mô hình có nhiều SU nhưng các SU này không có bất kỳ thông tin gì về nhau, mỗi SU có cách thức riêng để liên lạc với PU. Như vậy, việc mở rộng mô hình không làm thay đổi bài toán thiết kế \eqref{moop} đã đề cập trong Chương \ref{chap3}. Các SU cũng giải bài toán tối ưu của riêng mình, độc lập với nhau và không bị chi phối bởi các tham số khác.
+
+Việc mở rộng mô hình với nhiều SU giúp PU cải thiện hiệu năng an toàn của mình theo hai phương diện. Thứ nhất, số lượng SU càng tăng càng làm đa dạng vị trí của các SU và đặc tính kênh truyền, từ đó càng tăng khả năng có một SU với vị trí và điều kiện truyền tin phù hợp giúp tăng khác biệt lợi thế giữa kênh truyền chính và kênh truyền nghe lén của PU. Thứ hai, khi có càng nhiều SU, mức độ cạnh tranh tài nguyên tần số (do PU chia sẻ) càng cao, từ đó, trong việc thiết kế chiến lược truyền, các SU sẽ không chỉ tập trung vào hiệu năng cho riêng mình, mà cần cân nhắc cả hiệu năng của PU. Hiệu năng của PU càng được cải thiện thì cơ hội SU được lựa chọn càng cao.
+
+Với mô hình mở rộng này, bài toán tối ưu đa mục tiêu \eqref{moop} được chuyển thành:
+\begin{subequations}\label{competitive}
+\begin{align}
+\underset{p_P, p_S}{\text{minimize}} \quad & R_{L}^{(P)} \label{competitive:popt} \\
+\text{s.t} \quad & R_{L}^{(S)} \le \theta^{(S)}, \label{competitive:sopt} \\
+\quad & p_{tx}^{(P)} \geq \sigma^{(P)}, \label{competitive:ptxp} \\
+\quad & p_{tx}^{(S)} \geq \sigma^{(S)}, \label{competitive:ptxs} \\
+\quad & 0 \leq p_P \leq p_P^\text{max}, \label{competitive:pp} \\
+\quad & 0 \leq p_S \leq p_S^\text{max}, \label{competitive:ps}
+\end{align}
+\end{subequations}
+lúc này, hàm mục tiêu là hiệu năng an toàn ứng với PU $R_{L}^{(P)}$ và hiệu năng cho SU được đảm bảo thông qua một ngưỡng $\theta^{(S)}$ do SU lựa chọn. 
+
+Có một hướng tiếp cận khác cho "Bài toán cạnh tranh" này là chỉnh sửa bài toán cá nhân \eqref{self} theo hướng giảm giá trị ngưỡng cho $\theta^{(P)}$ trong \eqref{self:popt}, giá trị ngưỡng này càng giảm tức là hiệu năng của PU càng được cải thiện, không chỉ dừng lại ở mức "chấp nhận được" như trong \eqref{self}. Tuy nhiên, hướng giải quyết này không giúp gia tăng đáng kể cơ hội được PU lựa chọn, bởi các SU không có thông tin về nhau nên không thể lựa chọn giá trị ngưỡng tốt nhất cho bài toán. Với bài toán đề xuất \eqref{competitive}, SU có thể đưa ra chiến lược chỉ dựa trên các thông tin mình có với tham số tùy chỉnh duy nhất là $\theta^{(S)}$, phụ thuộc vào mức độ quan trọng của thông điệp cần gửi. Khi thông điệp cần gửi có yêu cầu an toàn thấp, SU có thể lựa chọn $\theta^{(S)}$ lớn, từ đó tăng phạm vi giá trị hợp lệ của $p_P$ và $p_S$, giúp tăng khả năng tìm được $R_{L}^{(P)}$ với giá trị nhỏ hơn, và kết quả là cơ hội SU được truyền tin càng cao.
+
+\section{Phương pháp giải quyết bài toán}
+
+Cả hai bài toán đề xuất đều là các bài toán tối ưu đơn mục tiêu với hàm mục tiêu là tốc độ lộ thông tin trung bình. Như đã phân tích ở đầu chương, các công thức $R_L^{(P)}$ \eqref{rlpfull} và $R_L^{(S)}$ \eqref{rlsfull} liên quan đến tích phân hàm mũ $\textnormal{Ei}$, điều đó làm bài toán tối ưu khó giải quyết bằng phương pháp phân tích. Tác giả Huang và các cộng sự \cite{huang2018secure} đã giải quyết vấn đề này bằng việc xấp xỉ $\textnormal{Ei}$ với giả thiết về chất lượng tín hiệu nhận tại PU, $\text{SINR}^{(P)}$ là lớn. Trong đồ án này, các bài toán tối ưu \eqref{self} và \eqref{competitive} sẽ được giải quyết bằng thuật toán tiến hóa vi phân (differential evolution). Mặc dù phương pháp này đòi hỏi thời gian thực thi lớn hơn, nhưng lời giải tối ưu tìm được là chính xác và có cơ hội tìm được nghiệm tối ưu toàn cục của các bài toán.
+
+\section{Kết chương}
+
+Chương này đã giải quyết bài toán tối ưu đề cập trong Chương \ref{chap3} bằng việc phân tích các đại lượng và các điều kiện ràng buộc, sau đó đề xuất hướng phát triển bài toán ban đầu. Trong quá trình đánh giá các điều kiện ràng buộc, chương này cũng đề xuất các công thức giúp xác định dải giá trị hợp lệ cho các tham số của bài toán, đảm bảo bài toán tối ưu có nghiệm. Hai đề xuất phát triển bài toán ban đầu là "Bài toán tối ưu cá nhân" và "Bài toán cạnh tranh" cho thấy sự phù hợp với thực tế khi đưa lợi ích của các bên vào quá trình mô hình hóa bài toán tối ưu. Việc lựa chọn bài toán phản ánh sự ưu tiên của người thiết kế - SU, đối với các mục tiêu truyền tin của mình. Với kết quả phân tích và phát triển bài toán, giải thuật tiến hóa vi phân được đề xuất sử dụng, không chỉ vì những ưu điểm của thuật toán mà còn vì sự phức tạp của các bài toán cần giải quyết. Dựa trên các đề xuất trong chương này, Chương \ref{chap5} sẽ triển khai thử nghiệm các bài toán với số liệu mô phỏng.
+
+\end{document}

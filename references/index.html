@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>References</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      html body {
+        font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans,
+          sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333;
+        background-color: #fff;
+        overflow: initial;
+        box-sizing: border-box;
+        word-wrap: break-word;
+        padding: 5%;
+      }
+
+      html body table {
+        margin: 10px 0 15px 0;
+        border-collapse: collapse;
+        border-spacing: 0;
+        display: block;
+        width: 100%;
+        overflow: auto;
+        word-break: normal;
+        word-break: keep-all;
+      }
+
+      html body table th {
+        font-weight: 700;
+        color: #000;
+      }
+
+      html body table td,
+      html body table th {
+        border: 1px solid #ffffff;
+        padding: 6px 13px;
+        cursor: default;
+      }
+      .search-container {
+        display: flex;
+        width: 70%;
+        align-items: center;
+        justify-content: space-between;
+        margin: auto;
+      }
+      .search-container * {
+        font-size: 18px;
+      }
+      table caption {
+        font-size: large;
+        margin-bottom: 10px;
+        text-align: start;
+      }
+      td ul {
+        padding: 0 0 0 10px;
+      }
+    </style>
+    <link
+      href="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.css"
+      rel="stylesheet"
+    />
+    <script
+      async
+      defer
+      src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.js"
+    ></script>
+  </head>
+
+  <body>
+    <div class="search-container">
+      <input
+        type="text"
+        autofocus
+        placeholder="EX: title#wireless comm&tags=fav,pls"
+        id="search-input"
+        style="flex: 1"
+      />
+      <button type="button" id="search-btn">Search</button>
+    </div>
+    <div id="references-container">
+      <h1>References</h1>
+      <table class="sortable" id="table-main"></table>
+    </div>
+    <pre id="search-guide"></pre>
+    <script src="src/bibtex-js-parser.js"></script>
+    <script src="src/bibtexParse.js"></script>
+    <script src="src/lib.js"></script>
+    <script src="src/render.js"></script>
+    <script src="src/data.js"></script>
+    <script src="src/config.js"></script>
+    <script src="src/parser.js"></script>
+    <script src="src/filter.js"></script>
+    <script src="src/main.js"></script>
+  </body>
+</html>

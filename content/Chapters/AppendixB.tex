@@ -1,0 +1,141 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}\label{appendixB}
+
+Phụ lục \ref{appendixA} cho thấy các dung lượng kênh $C^{(E)}$, $C^{(F)}$ ứng với các bên nghe lén $\text{EAVP}$ và $\text{EAVS}$ có thể biểu diễn theo biến ngẫu nhiên $U$ định nghĩa trong \eqref{lemmaU:U}. Mặt khác, mức độ không rõ ràng của các kẻ nghe lén, $\Delta^{(P)}$ và $\Delta^{(S)}$ tương ứng, được biểu diễn theo các dung lượng kênh này. Từ công thức biểu diễn \eqref{deltap} và \eqref{deltas}, thấy rằng biến ngẫu nhiên $Z = h_{m,n}\left(U\right)$ định nghĩa trong \eqref{lemmaZ:Z} có thể đại diện cho các đại lượng $\Delta^{(P)}$ và $\Delta^{(S)}$. Do đó, phần này thực hiện khảo sát biến ngẫu nhiên $Z$.
+
+\section{Hàm phân phối tích lũy}
+
+Dễ thấy $Z=h_{m,n}\left(U\right)$ định nghĩa trong \eqref{lemmaZ:Z} chỉ nhận giá trị trên đoạn $\left[0, 1\right]$, nên $F_Z(z) = 0$ với $z \leq 0$ và $F_Z(z) = 1$ với $z > 1$. Xét $z \in \left(0, 1\right]$, ta có:
+\begin{equation*}
+\begin{aligned}
+    F_Z(z) 
+    &= \mathbb{P}\left(h\left(U\right) \leq z\right)
+    \\ &= \mathbb{P}\left(2^m-1 \leq U\right) + \mathbb{P}\left(2^{m-n} - 1 < U < 2^m - 1\right)\\ & \qquad.\mathbb{P}\left(\,\frac{m - \log_2\left({1 + U}\right)}{n} \leq z \mid 2^{m-n} - 1 < U < 2^m - 1\,\right)
+    \\ &= \mathbb{P}\left(2^m-1 \leq U\right) + \mathbb{P}\left(2^{m-nz} - 1 \leq U < 2^m - 1\right)
+    \\ &= 1 - F_U\left(2^m-1\right) + F_U\left(2^m - 1\right) - F_U\left(2^{m-nz} - 1\right)
+    \\ &= 1 - F_U\left(2^{m-nz} - 1\right),
+\end{aligned}
+\end{equation*}
+với $F_U\left(u\right)$ là hàm phân phối tích lũy của $U$.
+
+Tóm lại, hàm phân phối tích lũy của biến ngẫu nhiên $Z = h_{m,n}\left(U\right)$ có công thức:
+\begin{equation}
+F_Z\left(z\right) = 
+\begin{cases}
+1,& \text{nếu}\quad z > 1\\
+1-F_U\left(2^{m-nz}-1\right),& \text{nếu}\quad 0 < z \leq 1\\
+0 ,& \text{nếu}\quad z \leq 0.
+\end{cases}
+\end{equation}
+
+\section{Giá trị kỳ vọng}
+
+Do $Z$ chỉ nhận giá trị trên đoạn $\left[0,1\right]$, nên theo \cite[định lý 5.3.8, trang 230]{blitzstein2019introduction}, kỳ vọng của $Z$ được xác định là:
+\begin{alignb}\label{proofB:EZ1}
+    \mathbb{E}\left\{Z\right\} 
+    &= \int_{0}^{\infty} \mathbb{P}\left(Z > z\right) \, dz \\
+    &= \int_{0}^{1} \Bigl( 1 - F_Z\left(z\right) \Bigr) \, dz \\
+    &= \int_{0}^{1} F_U\left(2^{m-nz}-1\right) \, dz.
+\end{alignb}
+Đặt $u = 2^{m-nz}-1$, ta có 
+$du = -n\ln{2}\left(u+1\right)dz$, khi đó \eqref{proofB:EZ1} trở thành:
+\begin{equation}\label{proofB:EZ}
+    \mathbb{E}\left\{Z\right\} 
+    = \frac{1}{n\ln{2}}\int_{2^{m-n}-1}^{2^{m}-1} 
+    \frac{F_U\left(u\right)}{u+1} \, du.
+\end{equation}
+
+Các phần tiếp theo xác định kỳ vọng của $Z$ ứng với biến ngẫu nhiên $U$ có phân phối khác nhau.
+
+\subsection{Phụ thuộc vào biến ngẫu nhiên có phân phối mũ}
+
+Khi $U$ là biến ngẫu nhiên có phân phối mũ với kỳ vọng $\Omega_U$, ta có:
+\begin{equation}\label{proofB:Uexp}
+    F_U\left(u\right) = 1-\exp\left(-\frac{u}{\Omega_U}\right).
+\end{equation}
+Thay \eqref{proofB:Uexp} vào \eqref{proofB:EZ}, ta được:
+\begin{alignb}\label{proofB:EZ:Uexp}
+    \mathbb{E}\left\{Z\right\} 
+    &= \frac{1}{n\ln{2}}\int_{2^{m-n}-1}^{2^{m}-1} \frac{1-\exp\left(-\frac{u}{\Omega_U}\right)}{u+1} \, du \\
+    &= \frac{1}{n\ln{2}}\int_{2^{m-n}-1}^{2^{m}-1} \frac{1-\exp\left(-\frac{u}{\Omega_U}\right)}{u+1} \, du \\
+    &= \frac{1}{n\ln{2}}\left[
+        \ln\left(u+1\right)-\exp\left(\frac{1}{\Omega_U}\right)
+                 \text{Ei}\left(-\frac{u+1}{\Omega_U}\right)
+    \right]_{u \ = \ 2^{m-n}-1}^{u \ = \ 2^{m}-1} \\
+    &= 1 - \frac{1}{n\ln{2}}\exp\left(\frac{1}{\Omega_U}\right)
+    \left[
+        \text{Ei}\left(-\frac{2^{m}}{\Omega_U}\right)
+      - \text{Ei}\left(-\frac{2^{m-n}}{\Omega_U}\right)
+    \right].
+\end{alignb}
+
+\subsection{Phụ thuộc vào hai biến ngẫu nhiên độc lập có phân phối mũ}
+
+Khi $U$ là biến ngẫu nhiên được định nghĩa trong \eqref{lemmaU:U}, ta có:
+\begin{equation}\label{proofB:EZ:U2}
+    F_U\left(u\right) = 1-\frac{1}{\frac{b\Omega_Y}{a\Omega_X}u + 1}\exp\left(-\frac{uc}{a\Omega_X}\right).
+\end{equation}
+Để đơn giản, đặt $k = \frac{c}{a\Omega_X}$ và $l = \frac{b\Omega_Y}{a\Omega_X}$, khi đó, \eqref{proofB:EZ:U2} thành:
+\begin{equation}\label{proofB:EZ:U3}
+    F_U\left(u\right) = 1-\frac{\exp\left(-ku\right)}{lu + 1}.
+\end{equation}
+Thay \eqref{proofB:EZ:U3} vào \eqref{proofB:EZ}, ta được:
+\allowdisplaybreaks
+\begin{alignb}\label{proofB:EZ:Uexp:2}
+    \mathbb{E}\left\{Z\right\} 
+    &= \frac{1}{n\ln{2}}
+    \int_{2^{m-n}-1}^{2^{m}-1} \left[
+        \frac{1}{u+1} - 
+        \frac{\exp\left(-ku\right)}{\left(lu + 1\right)\left(u+1\right)} 
+    \right]\, du.
+\end{alignb}
+
+Trong trường hợp $l \ne 1$, ta có thể biến đổi \eqref{proofB:EZ:Uexp:2} thành:
+\begin{alignb}\label{proofB:EZ:Uexp:21}
+    \mathbb{E}\left\{Z\right\} 
+    &= \frac{1}{n\ln{2}}
+    \int_{2^{m-n}-1}^{2^{m}-1} \left[
+        \frac{1}{u+1} 
+        - \frac{1}{l-1}\left(
+            \frac{\exp\left(-ku\right)}{u+1/l} 
+            - \frac{\exp\left(-ku\right)}{u+1} 
+        \right)
+    \right]\, du \\
+    &= \frac{1}{n\ln{2}}\left[
+        \ln\left(u+1\right)
+        - \frac{\exp\left(k/l\right)}{l-1}\text{Ei}\left(-ku - k/l\right) 
+        + \frac{\exp\left(k\right)}{l-1}\text{Ei}\left(-ku-k\right)  
+    \right]_{u \ = \ 2^{m-n}-1}^{u \ = \ 2^{m}-1} \\
+    &= 1 
+       - \frac{\exp\left(k/l\right)}{n\left(l-1\right)\ln{2}}
+        \left[
+            \text{Ei}\left(-k{2^{m}}+k-\frac{k}{l}\right)
+          - \text{Ei}\left(-k{2^{m-n}}+k-\frac{k}{l}\right)
+        \right] + \\
+    & \qquad + \frac{\exp\left(k\right)}{n\left(l-1\right)\ln{2}}
+        \Bigl[
+            \text{Ei}\left(-k{2^{m}}\right)
+          - \text{Ei}\left(-k{2^{m-n}}\right)
+        \Bigr].
+\end{alignb}
+
+Trong trường hợp $l=1$, dễ dàng chứng minh kết quả sau:
+\begin{alignb}\label{proofB:EZ:Uexp:22}
+    \mathbb{E}\left\{Z\right\} 
+    &= \frac{1}{n\ln{2}}\int_{2^{m-n}-1}^{2^{m}-1} 
+        \left[
+            \frac{1}{u+1} - \frac{\exp\left(-ku\right)}{\left(u+1\right)^2} 
+        \right]\, du \\
+    &= 1 + \frac{1}{n\ln{2}}
+        \left[ 
+            \frac{\exp\left(-k2^m+k\right)}{2^m} -
+            \frac{\exp\left(-k2^{m-n}+k\right)}{2^{m-n}}
+        \right] +  \\
+       & \qquad + \frac{k\exp\left(k\right)}{n\ln{2}}
+       \Bigl[
+            \text{Ei}\left(-k{2^{m}}\right) - 
+            \text{Ei}\left(-k{2^{m-n}}\right)
+       \Bigr].
+\end{alignb}
+
+\end{document}

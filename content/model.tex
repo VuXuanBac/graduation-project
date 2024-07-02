@@ -1,0 +1,49 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes, positioning, patterns}
+\usepackage[utf8]{vietnam}
+
+\begin{document}
+\begin{tikzpicture}[auto, node distance=3cm]
+\tikzset{>=latex}
+
+    % First row - centered no-fill square
+    \node[draw, minimum size=0.8cm, label=right:{PTx}] (square1) at (5.5, 0) {};
+
+    % Second row - equally spaced filled circle, hatched rhombus, no-fill square, filled circle
+    \node[fill=black, circle, minimum size=0.8cm, label=left:{EAVS}] (circle1) at (1, -3) {};
+    \node[draw, pattern=grid, diamond, minimum size=1cm, label=left:{SRx}] (rhombus2) at (4, -3) {};
+    \node[draw, minimum size=0.8cm, label=right:{PRx}] (square2) at (7, -3) {};
+    \node[fill=black, circle, minimum size=0.8cm, label=right:{EAVP}] (circle2) at (10, -3) {};
+
+    % Third row - centered hatched rhombus
+    \node[draw, pattern=grid, diamond, minimum size=1cm, label=right:{STx}] (rhombus1) at (5.5, -6) {};
+
+    % Connections from square1
+    \draw[dashed, black, ->] (square1) -- (circle1) node[midway, left] {$h_{pf}$};
+    \draw[dashed, black, ->] (square1) -- (rhombus2) node[midway, left] {$h_{ps}$};
+    \draw[thick, black, ->] (square1) -- (square2) node[midway, right] {$h_{pp}$};
+    \draw[thick, red, dash dot, ->] (square1) -- (circle2) node[midway, right, color=black] {$h_{pe}$};
+
+
+    % Connections from rhombus1
+    \draw[thick, red, dash dot, ->] (rhombus1) -- (circle1) node[midway, left, color=black] {$h_{sf}$};
+    \draw[thick, black, ->] (rhombus1) -- (rhombus2) node[midway, left] {$h_{ss}$};
+    \draw[dashed, black, ->] (rhombus1) -- (square2) node[midway, right] {$h_{sp}$};
+    \draw[dashed, black, ->] (rhombus1) -- (circle2) node[midway, right] {$h_{se}$};
+
+    % Legends (smaller size and more space)
+    \node[draw, minimum size=0.3cm, label={[font=\footnotesize]right:{\ Người dùng sơ cấp}}] (legend1) at (0.5, -7.5) {};
+    \node[draw, pattern=grid, diamond, minimum size=0.1cm, label={[font=\footnotesize]right:{Người dùng thứ cấp}}] (legend2) at (0.5, -8) {};
+    \node[draw, fill=black, circle, minimum size=0.3cm, label={[font=\footnotesize]right:{\ Kẻ nghe lén}}] (legend3) at (0.5, -8.5) {};
+
+    % Line legend
+    \node[font=\footnotesize, align=left] at (8.5, -8) {
+        \begin{tikzpicture}
+            \draw[thick, black, ->] (0, -1.25) -- (1, -1.25) node[right] {Đường truyền chính};
+            \draw[thick, red, dash dot, ->] (0, -1.75) -- (1, -1.75) node[right, color=black] {Đường truyền nghe lén};
+            \draw[dashed, black, ->] (0, -2.25) -- (1, -2.25) node[right] {Đường truyền can nhiễu};
+        \end{tikzpicture}
+    };
+\end{tikzpicture}
+\end{document}
