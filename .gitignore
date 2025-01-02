@@ -1,0 +1,7 @@
+/**/simulation/**/*.csv
+!/**/simulation/**/result*
+/**/__pycache__/
+/simulation/**
+*.py[cod]
+odds/**
+.venv/**

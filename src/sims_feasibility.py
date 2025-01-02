@@ -36,7 +36,7 @@ if prob == "1":
 ########## RHO ##########
 else:
     rhoS = list(np.round(np.linspace(0.05, 0.95, 19), 2))  # step = 0.05
-    rhoP = [0.5, 0.9]
+    rhoP = [0.1, 0.5, 0.9]
     RbP = 1.0
     RbS = 1.0
 

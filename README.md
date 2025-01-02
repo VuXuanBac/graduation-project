@@ -30,28 +30,7 @@ I use Latex for writing my project content. See [content](content/) folder.
 
 # Simulation Guide
 
-I use Python for numerical simulation. See [src](src/) folder.
-
-- `pip install -r requirements.txt`
-- `python sims_*.py` for running simulations
-  - `sims_feasibility`: generate data for experiments on $\rho$ and $R_b$ in transmission probability feasibility problem.
-  - `sims_generate`: generate data for compare between propositions
-    - run in order: feasibility -> noncoop: [PU and SU] -> selfish -> competitive
-    - result file in previous step will be required for latter steps
-    - data in result file of final step (competitive) will contains all data from previous step, so can use it for drawing
-  - `sims_competitive`: generate data for experiments on $\theta^{(S)}$ in competitive problem.
-    - require result of feasibility generated data.
-- pass data files into `draw_*.ipynb` for running illustration
-  - `draw_constraints`: draw feasibility region $G$
-  - `draw_rl`: draw 3d graph of $R_L$ onto $p_P$ and $p_S$
-  - `draw_feasibility`: draw transmission probability feasibility problem.
-  - `draw_main_*`: draw comparation between propositions
-    - `draw_main_general`: compare on all data
-    - `draw_main_sameptx`: compare on same or similar $p_{tx}^{(P)}$ only.
-    - `draw_main_channel`: compare on various channel conditions.
-  - `draw_thetas`: draw competitive problem with various $\theta^{(S)}$.
-  - `draw_multiuser`: draw competitive problem with multi SUs.
-- [Optional] pass data file to `analyze_*` for concat many run-try-data and review probability characteristics of data.
+See [GUIDE.md](GUIDE.md) for more details (vietnamese).
 
 # References
 
